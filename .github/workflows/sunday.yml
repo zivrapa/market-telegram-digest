@@ -1,0 +1,45 @@
+name: Sunday market digest
+
+# Required GitHub Actions secrets:
+#   TELEGRAM_BOT_TOKEN  — from @BotFather
+#   TELEGRAM_CHAT_ID    — your chat id (integer string)
+# Optional secrets:
+#   OPENAI_API_KEY      — enables AI summary when USE_LLM_SUMMARY is truthy
+# Repository variable (Settings → Variables → Actions):
+#   USE_LLM_SUMMARY     — set to "true" to call the LLM when OPENAI_API_KEY is present
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # 14:00 UTC Sunday ~ morning US Eastern depending on DST; adjust as needed.
+    - cron: "0 14 * * 0"
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run digest
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          USE_LLM_SUMMARY: ${{ vars.USE_LLM_SUMMARY }}
+          DIGEST_CONFIG: config.yaml
+          SNAPSHOT_OUT: digest_snapshot.json
+        run: python -m src.main
+
+      - name: Upload snapshot artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: digest-snapshot
+          path: digest_snapshot.json

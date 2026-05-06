@@ -1,0 +1,52 @@
+timezone_display: "America/New_York"
+
+benchmark_symbol: "SPY"
+
+macro_symbols:
+  - SPY
+  - QQQ
+  - IWM
+  - "^VIX"
+
+# Rolling relative strength vs benchmark (trading days lookback)
+relative_strength_lookback_days: 20
+
+indicators:
+  rsi_length: 14
+  macd_fast: 12
+  macd_slow: 26
+  macd_signal: 9
+  sma_fast: 50
+  sma_slow: 200
+
+# Theme name -> proxy symbols (first symbol is the primary headline for that theme)
+themes:
+  semiconductors:
+    - SMH
+    - SOXX
+  energy:
+    - XLE
+    - XOP
+    - OIH
+  uranium:
+    - URA
+    - NLR
+  industrials_defense:
+    - XLI
+    - ITA
+  materials_metals:
+    - XLB
+    - GLDM
+    - SLV
+  biotech:
+    - XBI
+    - IBB
+  clean_energy:
+    - ICLN
+    - TAN
+  crypto_miners:
+    - WGMI
+    - BITQ
+
+# Optional personal watchlist scanned for the same rules as themes
+watchlist: []
